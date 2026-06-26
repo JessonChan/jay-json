@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
@@ -13,21 +14,21 @@ func (j *JSONService) decodeJSON(input string) (interface{}, error) {
 	decoder := json.NewDecoder(strings.NewReader(input))
 	decoder.UseNumber()
 	if err := decoder.Decode(&obj); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode json: %w", err)
 	}
 	return obj, nil
 }
 
 // FormatJSON prettifies JSON with 2-space indentation while preserving large numbers
-func (j *JSONService) FormatJSON(input string, _ bool) (string, error) {
+func (j *JSONService) FormatJSON(input string) (string, error) {
 	obj, err := j.decodeJSON(input)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("format json: %w", err)
 	}
 
 	formatted, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("marshal json: %w", err)
 	}
 
 	return string(formatted), nil
@@ -37,12 +38,12 @@ func (j *JSONService) FormatJSON(input string, _ bool) (string, error) {
 func (j *JSONService) MinifyJSON(input string) (string, error) {
 	obj, err := j.decodeJSON(input)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("minify json: %w", err)
 	}
 
 	minified, err := json.Marshal(obj)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("marshal json: %w", err)
 	}
 
 	return string(minified), nil
@@ -51,19 +52,17 @@ func (j *JSONService) MinifyJSON(input string) (string, error) {
 // ValidateJSON checks if JSON is valid and returns error details
 func (j *JSONService) ValidateJSON(input string) (bool, string, error) {
 	decoder := json.NewDecoder(strings.NewReader(input))
-	decoder.DisallowUnknownFields()
 
 	var obj interface{}
 	err := decoder.Decode(&obj)
 	if err != nil {
-		// Try to extract line number from error
 		errMsg := err.Error()
 		return false, errMsg, nil
 	}
 
 	// Check for trailing content
 	if decoder.More() {
-		return false, "Invalid JSON: unexpected content after JSON value", nil
+		return false, "invalid json: unexpected content after json value", nil
 	}
 
 	return true, "Valid JSON!", nil

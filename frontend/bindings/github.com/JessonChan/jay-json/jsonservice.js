@@ -9,11 +9,10 @@ import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Cr
 /**
  * FormatJSON prettifies JSON with 2-space indentation while preserving large numbers
  * @param {string} input
- * @param {boolean} $1
  * @returns {$CancellablePromise<string>}
  */
-export function FormatJSON(input, $1) {
-    return $Call.ByID(99097422, input, $1);
+export function FormatJSON(input) {
+    return $Call.ByID(99097422, input);
 }
 
 /**

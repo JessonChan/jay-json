@@ -1,4 +1,4 @@
-module changeme
+module github.com/JessonChan/jay-json
 
 go 1.25
 

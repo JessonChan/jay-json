@@ -23,6 +23,15 @@ export function OpenNewWindow() {
 }
 
 /**
+ * RemoveWindow removes a closed window from the tracking map
+ * @param {string} windowId
+ * @returns {$CancellablePromise<void>}
+ */
+export function RemoveWindow(windowId) {
+    return $Call.ByID(589910297, windowId);
+}
+
+/**
  * ToggleAlwaysOnTop toggles the always-on-top state of all windows
  * @returns {$CancellablePromise<boolean>}
  */
